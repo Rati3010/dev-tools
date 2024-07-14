@@ -1,35 +1,62 @@
 import React, { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Box, CssBaseline, Container, Typography, ToggleButtonGroup } from "@mui/material";
+import Filter from "./Filter";
+import RequestList from "./RequestList";
+import { useSelector } from "react-redux";
+import { setFilter } from "../redux/actions/requestActions";
 
 const NetworkRequest = ({ onSubmit }) => {
   const [url, setUrl] = useState("");
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const filter = useSelector(state => state.filter);
+  
+  const handleSearch = () => {
+    console.log(url)
     onSubmit(url);
   };
 
   return (
-    <>
-      <h1>Network Request</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+    <Box
+      sx={{
+        backgroundColor: '#212121', 
+        minHeight: '100vh',
+        color: 'white',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <CssBaseline />
+      <Container maxWidth="lg" style={{ textAlign: 'center' }}>
+        <Typography variant="h4" gutterBottom style={{ marginBottom: '20px' }}>
+          Network Requests
+        </Typography>
         <TextField
-          label="Enter Website URL"
+          label="Enter URL"
           variant="outlined"
           fullWidth
           value={url}
           onChange={(e) => setUrl(e.target.value)}
+          margin="dense"
+          InputProps={{
+            style: { color: 'white' },
+          }}
+          InputLabelProps={{
+            style: { color: 'white' },
+          }}
         />
         <Button
-          type="submit"
           variant="contained"
           color="primary"
-          style={{ marginTop: "10px" }}
+          onClick={handleSearch}
+          style={{ marginLeft: '10px', marginTop: '10px', marginBottom: '20px' }}
         >
-          Fetch Requests
+          Search
         </Button>
-      </form>
-    </>
+      </Container>
+      <Filter filter={filter} setFilter={(filter) => dispatch(setFilter(filter))}/>
+      <RequestList/>
+    </Box>
   );
 };
 
